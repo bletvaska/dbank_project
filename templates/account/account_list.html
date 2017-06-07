@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}List of mBank Accounts{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "bank:accounts_list" %}">Accounts</a></li>
+{% endblock %}
+
+{% block content %}
+    <br><br>
+    <div class="container">
+    <div class="row">
+    <h1>List of mBank Accounts</h1>
+
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>IBAN</th>
+            <th>balance</th>
+            <th>owner</th>
+            <th>transactions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in object_list %}
+            <tr>
+                <td>{{ account.iban }}</td>
+                <td>{{ account.balance }}</td>
+                <td>
+                    <a href="{% url 'bank:clients_detail' account.owner.id %}">{{ account.owner.name }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'bank:account_transactions' account.id %}">
+                        {{ account.transactions.count }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+    </table>
+    </div>
+    </div>
+{% endblock %}
