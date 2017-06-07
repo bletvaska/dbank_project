@@ -1,19 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail of client</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Client {{ object.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "bank:clients_list" %}">Clients</a></li>
+    <li><a href="{% url "bank:clients_detail" object.id %}">{{ object.name }}</a></li>
+{% endblock %}
+
+{% block content %}
     <h1>Client {{ object.name }}</h1>
 
-    <ul>
-        <li>
-            id: {{ object.id }}
-        </li>
-        <li>
-            accounts: {{ object.account_set }}
-        </li>
-    </ul>
-</body>
-</html>
+    <h2>Accounts</h2>
+
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>IBAN</th>
+            <th>balance</th>
+            <th>transactions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in object.account_set.all %}
+            <tr>
+                <td>{{ account.iban }}</td>
+                <td>{{ account.balance }}</td>
+                <td>
+                    <a href="{% url 'bank:account_transactions' account.id %}">
+                        {{ account.transactions.count }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+{% endblock %}

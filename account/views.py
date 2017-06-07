@@ -34,9 +34,19 @@ class AccountTransactionListView(ListView):
     template_name = 'account/transaction_list.html'
 
     def get_queryset(self):
-        print(self.kwargs.get('account_id'))
-        return None
+        account_id = self.kwargs.get('account_id')
+        # q1 = Transaction.objects.filter(src=account_id)
+        # q2 = Transaction.objects.filter(dest=account_id)
+        # return q1 | q2
+        return Transaction.objects.extra(where=['src_id={0} or dest_id={0}'.format(account_id)])
 
 
 class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
+
+    def get_queryset(self):
+        if 'account_id' in self.kwargs:
+            account_id = self.kwargs.get('account_id')
+            return Transaction.objects.extra(where=['src_id={0} or dest_id={0}'.format(account_id)])
+        else:
+            return Transaction.objects.all()
