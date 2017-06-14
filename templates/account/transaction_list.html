@@ -3,42 +3,45 @@
 {% block title %}List of mBank Transactions{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:transactions_list" %}">Transactions</a></li>
+    <li><a href="{% url "bank:transactions-list" %}">Transactions</a></li>
 {% endblock %}
 
 {% block content %}
-    <br><br>
     <div class="container">
-    <div class="row">
-    <h1>List of mBank Transactions</h1>
+        <div class="row">
+            <h1>List of mBank Transactions</h1>
 
-    <table class="table table-striped">
-    <thead>
-        <tr>
-            <th>timestamp</th>
-            <th>type</th>
-            <th>from</th>
-            <th>to</th>
-            <th>amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for transaction in object_list %}
-            <tr>
-                <td>{{ transaction.timestamp }}</td>
-                <td>{{ transaction.get_type }}</td>
-                <td>
-                    {{ transaction.src.iban }}
-                </td>
-                <td>
-                    {{ transaction.dest.iban }}
-                </td>
-                <td>{{ transaction.amount }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>timestamp</th>
+                    <th>type</th>
+                    <th>from</th>
+                    <th>to</th>
+                    <th>amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in object_list %}
+                    <tr>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.get_type }}</td>
+                        <td>
+                            {{ transaction.src.iban }}
+                        </td>
+                        <td>
+                            {{ transaction.dest.iban }}
+                        </td>
+                        <td>{{ transaction.amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
 
-    </table>
-    </div>
+            </table>
+        </div>
+
+        <div class="row text-right">
+            <a class="btn btn-primary" href="{% url "bank:transactions-create" %}" role="button">Make Transaction</a>
+        </div>
     </div>
 {% endblock %}

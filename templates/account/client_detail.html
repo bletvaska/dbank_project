@@ -3,8 +3,8 @@
 {% block title %}Client {{ object.name }}{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:clients_list" %}">Clients</a></li>
-    <li><a href="{% url "bank:clients_detail" object.id %}">{{ object.name }}</a></li>
+    <li><a href="{% url "bank:clients-list" %}">Clients</a></li>
+    <li><a href="{% url "bank:clients-detail" object.id %}">{{ object.name }}</a></li>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
                 <td>{{ account.iban }}</td>
                 <td>{{ account.balance }}</td>
                 <td>
-                    <a href="{% url 'bank:account_transactions' account.id %}">
+                    <a href="{% url 'bank:account-transactions' account.id %}">
                         {{ account.transactions.count }}
                     </a>
                 </td>

@@ -3,7 +3,7 @@
 {% block title %}List of mBank Clients{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:clients_list" %}">Clients</a></li>
+    <li><a href="{% url "bank:clients-list" %}">Clients</a></li>
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     <ul>
         {% for client in object_list %}
             <li>
-                <a href="{% url 'bank:clients_detail' client.id %}">{{ client.name }}</a>
+                <a href="{% url 'bank:clients-detail' client.id %}">{{ client.name }}</a>
             </li>
         {% endfor %}
 

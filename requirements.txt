@@ -3,4 +3,3 @@ django-bootstrap3==8.2.3
 django-debug-toolbar==1.7
 django-extensions==1.7.8
 djangorestframework==3.6.2
-virtualenv==15.1.0

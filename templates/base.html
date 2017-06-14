@@ -33,8 +33,8 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         {% block navbar %}
-                            <li><a href="{% url "bank:accounts_list" %}">Accounts</a></li>
-                            <li><a href="{% url "bank:clients_list" %}">Clients</a></li>
+                            <li><a href="{% url "bank:accounts-list" %}">Accounts</a></li>
+                            <li><a href="{% url "bank:transactions-list" %}">Transactions</a></li>
                         {% endblock %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -49,7 +49,7 @@
                                         </a>
                                     </li>
                                 {% endif %}
-                                {% url "bootstrap3:logout" as logout_url %}
+                                {% url "logout" as logout_url %}
                                 {% if logout_url %}
                                     <li>
                                         <a href="{{ logout_url }}">

@@ -1,9 +1,12 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 # Create your models here.
-class Client(models.Model):
+
+class Client(AbstractUser):
     name = models.CharField('clients name', max_length=128, null=False)
+    phone_number = models.CharField('phone number', max_length=64, null=True)
 
     def __str__(self):
         return '{}: {}'.format(self.id, self.name)
@@ -12,8 +15,8 @@ class Client(models.Model):
 class Account(models.Model):
     iban = models.CharField('iban', max_length=10, null=False, unique=True)
     created = models.DateTimeField('creation date', auto_now_add=True)
-    closed = models.DateTimeField('closed date', default=None, null=True)
-    balance = models.FloatField('current balance', default=0, null=False)
+    closed = models.DateTimeField('closed date', default=None, null=True, blank=True)
+    balance = models.FloatField('current balance', default=0, null=False, blank=True)
     owner = models.ForeignKey(Client, null=False)
 
     def deposit(self, amount):
@@ -64,6 +67,10 @@ class Account(models.Model):
 
     def __str__(self):
         return '{} ({}) {}'.format(self.iban, self.owner.name, self.balance)
+
+    # def get_absolute_url(self):
+    #     # from django.urls import reverse
+    #     return reverse('account.views.details', args=[str(self.id)])
 
 
 class Transaction(models.Model):
