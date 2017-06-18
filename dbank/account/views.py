@@ -1,17 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.db.models import Q
 
 # Create your views here.
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
+from account.forms import AccountForm
 from account.models import Client, Account, Transaction
-
-
-class Hello(View):
-    def get(self, request):
-        return HttpResponse('hello world')
 
 
 class HomePage(TemplateView):
@@ -33,38 +29,42 @@ class AccountListView(LoginRequiredMixin, ListView):
         return Account.objects.filter(owner=self.request.user)
 
 
-class AccountTransactionListView(ListView):
-    model = Transaction
-    template_name = 'account/transaction_list.html'
-    ordering = ['-timestamp']
-
-    def get_queryset(self):
-        account_id = self.kwargs.get('account_id')
-        # q1 = Transaction.objects.filter(src=account_id)
-        # q2 = Transaction.objects.filter(dest=account_id)
-        # return q1 | q2
-        return Transaction.objects.extra(where=['src_id={0} or dest_id={0}'.format(account_id)])
-
-
 class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     ordering = ['-timestamp']
 
     def get_queryset(self):
+        ordering = self.get_ordering()
+
         if 'account_id' in self.kwargs:
             account_id = self.kwargs.get('account_id')
-            return Transaction.objects.extra(where=['src_id={0} or dest_id={0}'.format(account_id)])
+            return Transaction.objects.filter(Q(src__id=account_id) | Q(dest__id=account_id)).order_by(*ordering)
         else:
-            return Transaction.objects.all()
+            client = self.request.user
+            return Transaction.objects.filter(Q(src__owner=client) | Q(dest__owner=client)).order_by(*ordering)
 
 
 class AccountCreate(LoginRequiredMixin, CreateView):
     model = Account
-    fields = ['iban', 'owner', ]
+    # form_class = AccountForm
+    fields = ['iban']
     success_url = reverse_lazy('bank:accounts-list')
+
+    def form_valid(self, form):
+        print('juchu')
+        return HttpResponseRedirect(self.get_success_url())
+
+    # def get_form_kwargs(self):
+    #     kwargs = super(AccountCreate, self).get_form_kwargs()
+    #     kwargs['owner'] = self.request.user
+    #     return kwargs
 
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
     model = Transaction
     fields = ['src', 'dest', 'amount', ]
     success_url = reverse_lazy('bank:transactions-list')
+
+    def form_valid(self, form):
+        print('juchu')
+        return None

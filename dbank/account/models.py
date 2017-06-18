@@ -1,4 +1,6 @@
+import re
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -12,8 +14,14 @@ class Client(AbstractUser):
         return '{}: {}'.format(self.id, self.name)
 
 
+def validate_iban(value):
+    match = re.search('^[A-Z]{2}\d+$', value)
+    if not match:
+        raise ValidationError('IBAN has wrong format.')
+
+
 class Account(models.Model):
-    iban = models.CharField('iban', max_length=10, null=False, unique=True)
+    iban = models.CharField('iban', max_length=10, null=False, unique=True, validators=[validate_iban])
     created = models.DateTimeField('creation date', auto_now_add=True)
     closed = models.DateTimeField('closed date', default=None, null=True, blank=True)
     balance = models.FloatField('current balance', default=0, null=False, blank=True)

@@ -1,14 +1,12 @@
 from django.conf.urls import url
-from django.urls import reverse
 
-from account.views import ClientListView, ClientDetailView, AccountListView, AccountTransactionListView, \
+from account.views import ClientListView, ClientDetailView, AccountListView, \
     TransactionListView, AccountCreate, TransactionCreate
 
 app_name = 'bank'
 
 
 urlpatterns = [
-    # url(r'hello', Hello.as_view(), name='hello'),
     # url(r'^$', HomePage.as_view(), name='home'),
     url(r'clients/$', ClientListView.as_view(), name='clients-list'),
     url(r'clients/(?P<pk>\d+)$', ClientDetailView.as_view(), name='clients-detail'),
