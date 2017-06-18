@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>
-            {% block title %}mBank{% endblock %}
+            {% block title %}dBank{% endblock %}
         </title>
 
         {% load static %}
@@ -33,8 +33,8 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         {% block navbar %}
-                            <li><a href="{% url "bank:accounts-list" %}">Accounts</a></li>
-                            <li><a href="{% url "bank:transactions-list" %}">Transactions</a></li>
+                            <li><a href="{% url "bank:accounts_list" %}">My Accounts</a></li>
+                            <li><a href="{% url "bank:transactions_list" %}">My Transactions</a></li>
                         {% endblock %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
