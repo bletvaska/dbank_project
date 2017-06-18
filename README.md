@@ -9,7 +9,7 @@ Bank web application for Django - course project.
 then create virtual environment and install all the required packages with following commands:
 
 ```bash
-cd dbank
+cd dbank_project
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
