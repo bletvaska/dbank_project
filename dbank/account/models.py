@@ -7,11 +7,10 @@ from django.db import models
 # Create your models here.
 
 class Client(AbstractUser):
-    name = models.CharField('clients name', max_length=128, null=False)
     phone_number = models.CharField('phone number', max_length=64, null=True)
 
     def __str__(self):
-        return '{}: {}'.format(self.id, self.name)
+        return self.get_full_name().title()
 
 
 def validate_iban(value):
@@ -74,7 +73,7 @@ class Account(models.Model):
         return self.transaction_set.all() | self.target.all()
 
     def __str__(self):
-        return '{} ({}) {}'.format(self.iban, self.owner.name, self.balance)
+        return '{} ({}) {}'.format(self.iban, self.owner.get_full_name(), self.balance)
 
     # def get_absolute_url(self):
     #     # from django.urls import reverse

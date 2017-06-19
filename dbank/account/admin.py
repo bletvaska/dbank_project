@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.urls import reverse
 
-from account.models import Client, Account, Transaction
+from .models import Client, Account, Transaction
 
 
 class AdminAccout(admin.ModelAdmin):
@@ -70,7 +70,7 @@ class AdminTransaction(admin.ModelAdmin):
 
 
 class AdminClient(admin.ModelAdmin):
-    list_display = ('name', 'list_accounts')
+    list_display = ('get_full_name', 'list_accounts')
 
     def list_accounts(self, obj):
         accounts = obj.account_set.count()

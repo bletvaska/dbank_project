@@ -5,9 +5,14 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticated
 
-from account.forms import AccountForm
-from account.models import Client, Account, Transaction
+from .serializers import AccountSerializer
+from .forms import AccountForm
+from .models import Client, Account, Transaction
 
 
 class HomePage(TemplateView):
@@ -58,6 +63,16 @@ class AccountCreate(LoginRequiredMixin, CreateView):
     #     kwargs = super(AccountCreate, self).get_form_kwargs()
     #     kwargs['owner'] = self.request.user
     #     return kwargs
+
+
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+class AccountCreateReadView(ListCreateAPIView):
+    serializer_class = AccountSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
 
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
