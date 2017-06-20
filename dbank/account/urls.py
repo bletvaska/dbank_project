@@ -1,18 +1,17 @@
 from django.conf.urls import url
 
-from .views import ClientListView, ClientDetailView, AccountListView, \
-    TransactionListView, AccountCreate, TransactionCreate, AccountCreateReadView
+from .views import ClientDetailView, AccountListView, \
+    TransactionListView, AccountCreate, TransactionCreate, APIAccountList, DashboardView
 
 app_name = 'bank'
 
 
 urlpatterns = [
-    # url(r'^$', HomePage.as_view(), name='home'),
-    url(r'clients/$', ClientListView.as_view(), name='clients_list'),
-    url(r'clients/(?P<pk>\d+)$', ClientDetailView.as_view(), name='clients_detail'),
+    url(r'api/accounts/$', APIAccountList.as_view(), name='account_list_api'),
 
-    # REST API
-    url(r'api/accounts/$', AccountCreateReadView.as_view(), name='accounts_rest_api'),
+    # url(r'clients/(?P<pk>\d+)$', ClientDetailView.as_view(), name='clients_detail'),
+    url(r'clients/$', ClientDetailView.as_view(), name='clients_detail'),
+    url(r'dashboard/$', DashboardView.as_view(), name='dashboard'),
 
     url(r'accounts/$', AccountListView.as_view(), name='accounts_list'),
     url(r'accounts/create$', AccountCreate.as_view(), name='accounts_create'),

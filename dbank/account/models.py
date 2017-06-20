@@ -54,9 +54,9 @@ class Account(models.Model):
         if dest.is_closed():
             raise ValueError('Destination Account is Closed')
 
-        self.amount -= amount
+        self.balance -= amount
         self.save()
-        dest.amount += amount
+        dest.balance += amount
         dest.save()
 
         # make transaction

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard of {{ user.get_full_name|title }}{% endblock %}
+
+{#{% block breadcrumbs %}#}
+{#    <li><a href="{% url "bank:dashboard" %}">{{ user.get_full_name|title }}</a></li>#}
+{#{% endblock %}#}
+
+{% block content %}
+    <h1>Dashboard of {{ user.get_full_name|title }}</h1>
+
+    <ul>
+        <li>
+            <b>Phone Number:</b> {{ user.phone_number }}
+        </li>
+        <li>
+            <b>E-mail:</b> {{ user.email }}
+        </li>
+        <li>
+            <b>Last Login: </b> {{ user.last_login }}
+        </li>
+    </ul>
+
+    <h2>List of Accounts</h2>
+
+    {% if client_accounts|length == 0 %}
+        <p>no accounts</p>
+    {% else %}
+        <table class="table">
+            <tr>
+                <th>IBAN</th>
+                <th>balance</th>
+                <th>transactions</th>
+            </tr>
+        {% for account in client_accounts %}
+            <tr>
+                <td>
+                    {{ account.iban }}
+                </td>
+                <td>
+                    {{ account.balance }}
+                </td>
+                <td>
+                    <a href="{% url 'bank:account_transactions' account.id %}">
+                        {{ account.transactions.count }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+        (<a href="{% url "bank:accounts_list" %}">List All</a>)
+    {% endif %}
+
+    <div class="row text-right">
+        <a class="btn btn-primary" href="{% url "bank:accounts_create" %}" role="button">New Account</a>
+    </div>
+
+    <h2>Last Transactions</h2>
+
+    {% if last_transactions|length == 0 %}
+        <p>no transactions</p>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>timestamp</th>
+                    <th>type</th>
+                    <th>from</th>
+                    <th>to</th>
+                    <th>amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in last_transactions %}
+                    <tr>
+                        <td>{{ transaction.timestamp }}</td>
+                        <td>{{ transaction.get_type }}</td>
+                        <td>
+                            {{ transaction.src.iban }}
+                        </td>
+                        <td>
+                            {{ transaction.dest.iban }}
+                        </td>
+                        <td>{{ transaction.amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        (<a href="{% url "bank:transactions_list" %}">List All</a>)
+    {% endif %}
+
+    <div class="row text-right">
+        <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
+    </div>
+
+
+{% endblock %}

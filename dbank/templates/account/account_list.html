@@ -25,9 +25,7 @@
                 <tr>
                     <td>{{ account.iban }}</td>
                     <td>{{ account.balance }}</td>
-                    <td>
-                        <a href="{% url 'bank:clients_detail' account.owner.id %}">{{ account.owner.name }}</a>
-                    </td>
+                    <td>{{ account.owner.get_full_name|title }}</td>
                     <td>
                         <a href="{% url 'bank:account_transactions' account.id %}">
                             {{ account.transactions.count }}
@@ -43,7 +41,6 @@
         <div class="row text-right">
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-primary" href="{% url "bank:accounts_create" %}" role="button">New Account</a>
-                <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
             </div>
         </div>
     </div>

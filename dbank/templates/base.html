@@ -26,7 +26,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{% url "home" %}">
+                    <a class="navbar-brand" href="{% url "homepage" %}">
                         {% block brand %}mBank{% endblock %}
                     </a>
                 </div>
@@ -79,7 +79,10 @@
         <div class="container">
             {% block breadcrumbs_container %}
                 <ol class="breadcrumb">
-                    <li><a href="{% url "home" %}">Home</a></li>
+                    <li>
+{#                        <a href="{% url "homepage" %}">Home</a>#}
+                        <a href="{% url "bank:dashboard" %}">{{ user.get_full_name|title }}</a>
+                    </li>
                     {% block breadcrumbs %}{% endblock %}
                 </ol>
             {% endblock %}

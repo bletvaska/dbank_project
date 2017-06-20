@@ -16,7 +16,7 @@ class AdminAccout(admin.ModelAdmin):
     def get_owner_name(self, obj):
         ct = obj.owner._meta  # content type
         url = reverse('admin:{}_{}_change'.format(ct.app_label, ct.model_name), args=(obj.owner.pk,))
-        return '<a href="{}">{}</a>'.format(url, obj.owner.name)
+        return '<a href="{}">{}</a>'.format(url, obj.owner.get_full_name())
 
     get_owner_name.short_description = 'owner'
     get_owner_name.allow_tags = True
