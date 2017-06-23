@@ -5,7 +5,7 @@ from .views import AccountListView, \
     TransactionListView, AccountCreate, TransactionCreate, DashboardView, \
     AccountViewSet, ClientViewSet, TransactionViewSet
 
-app_name = 'bank'
+# app_name = 'bank'
 
 router = routers.DefaultRouter()
 router.register(r'api/accounts', AccountViewSet, base_name='account')

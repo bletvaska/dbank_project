@@ -128,7 +128,7 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         return Response(serializer.data)
 
     def create(self, request):
-        data = {'iban': request.data['iban'], 'owner': reverse('bank:client-detail', kwargs={'pk': request.user.id})}
+        data = {'iban': request.data['iban'], 'owner': reverse('client-detail', kwargs={'pk': request.user.id})}
         # account = Account(iban=request.data['iban'], owner=request.user)
         serializer = AccountSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
