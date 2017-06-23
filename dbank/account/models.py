@@ -1,3 +1,5 @@
+import datetime
+
 import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -71,6 +73,17 @@ class Account(models.Model):
 
     def transactions(self):
         return self.transaction_set.all() | self.target.all()
+
+    def close(self, close_date=None):
+        if self.closed is not None:
+            raise Exception('Account is already closed.')
+        if self.balance != 0:
+            raise Exception('Account is not empty.')
+        if close_date is None:
+            self.closed = datetime.datetime.now()
+        else:
+            self.closed = close_date
+        self.save()
 
     def __str__(self):
         return '{} ({}) {}'.format(self.iban, self.owner.get_full_name(), self.balance)

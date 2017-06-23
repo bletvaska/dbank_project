@@ -2,10 +2,6 @@
 
 {% block title %}Dashboard of {{ user.get_full_name|title }}{% endblock %}
 
-{#{% block breadcrumbs %}#}
-{#    <li><a href="{% url "bank:dashboard" %}">{{ user.get_full_name|title }}</a></li>#}
-{#{% endblock %}#}
-
 {% block content %}
     <h1>Dashboard of {{ user.get_full_name|title }}</h1>
 
@@ -93,6 +89,4 @@
     <div class="row text-right">
         <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
     </div>
-
-
 {% endblock %}
