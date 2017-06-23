@@ -34,8 +34,8 @@
                     <ul class="nav navbar-nav">
                         {% block navbar %}
                             {% if user.is_authenticated %}
-                            <li><a href="{% url "bank:accounts_list" %}">My Accounts</a></li>
-                            <li><a href="{% url "bank:transactions_list" %}">My Transactions</a></li>
+                            <li><a href="{% url "accounts_list" %}">My Accounts</a></li>
+                            <li><a href="{% url "transactions_list" %}">My Transactions</a></li>
                             {% endif %}
                         {% endblock %}
                     </ul>
@@ -83,7 +83,7 @@
                 <ol class="breadcrumb">
                     <li>
 {#                        <a href="{% url "homepage" %}">Home</a>#}
-                        <a href="{% url "bank:dashboard" %}">{{ user.get_full_name|title }}</a>
+                        <a href="{% url "dashboard" %}">{{ user.get_full_name|title }}</a>
                     </li>
                     {% block breadcrumbs %}{% endblock %}
                 </ol>

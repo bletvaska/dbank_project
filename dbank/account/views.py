@@ -67,7 +67,7 @@ class AccountCreate(LoginRequiredMixin, CreateView):
     model = Account
     # form_class = AccountForm
     fields = ['iban']
-    success_url = reverse_lazy('bank:accounts_list')
+    success_url = reverse_lazy('accounts_list')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -76,7 +76,7 @@ class AccountCreate(LoginRequiredMixin, CreateView):
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
     model = Transaction
-    success_url = reverse_lazy('bank:transactions_list')
+    success_url = reverse_lazy('transactions_list')
     form_class = TransactionForm
 
     def get_initial(self):

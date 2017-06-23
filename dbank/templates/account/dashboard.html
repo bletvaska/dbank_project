@@ -37,18 +37,18 @@
                     {{ account.balance }}
                 </td>
                 <td>
-                    <a href="{% url 'bank:account_transactions' account.id %}">
+                    <a href="{% url 'account_transactions' account.id %}">
                         {{ account.transactions.count }}
                     </a>
                 </td>
             </tr>
         {% endfor %}
         </table>
-        (<a href="{% url "bank:accounts_list" %}">List All</a>)
+        (<a href="{% url "accounts_list" %}">List All</a>)
     {% endif %}
 
     <div class="row text-right">
-        <a class="btn btn-primary" href="{% url "bank:accounts_create" %}" role="button">New Account</a>
+        <a class="btn btn-primary" href="{% url "accounts_create" %}" role="button">New Account</a>
     </div>
 
     <h2>Last Transactions</h2>
@@ -83,10 +83,10 @@
             </tbody>
 
         </table>
-        (<a href="{% url "bank:transactions_list" %}">List All</a>)
+        (<a href="{% url "transactions_list" %}">List All</a>)
     {% endif %}
 
     <div class="row text-right">
-        <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
+        <a class="btn btn-primary" href="{% url "transactions_create" %}" role="button">Make Transaction</a>
     </div>
 {% endblock %}

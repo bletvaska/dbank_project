@@ -3,7 +3,7 @@
 {% block title %}List of dBank Accounts{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:accounts_list" %}">Accounts</a></li>
+    <li><a href="{% url "accounts_list" %}">Accounts</a></li>
 {% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
                     <td>{{ account.balance }}</td>
                     <td>{{ account.owner.get_full_name|title }}</td>
                     <td>
-                        <a href="{% url 'bank:account_transactions' account.id %}">
+                        <a href="{% url 'account_transactions' account.id %}">
                             {{ account.transactions.count }}
                         </a>
                     </td>
@@ -40,7 +40,7 @@
 
         <div class="row text-right">
             <div class="btn-group" role="group" aria-label="...">
-                <a class="btn btn-primary" href="{% url "bank:accounts_create" %}" role="button">New Account</a>
+                <a class="btn btn-primary" href="{% url "accounts_create" %}" role="button">New Account</a>
             </div>
         </div>
     </div>

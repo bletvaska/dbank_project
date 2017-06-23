@@ -5,13 +5,14 @@ from .views import AccountListView, \
     TransactionListView, AccountCreate, TransactionCreate, DashboardView, \
     AccountViewSet, ClientViewSet, TransactionViewSet
 
-# app_name = 'bank'
 
 router = routers.DefaultRouter()
 router.register(r'api/accounts', AccountViewSet, base_name='account')
 router.register(r'api/clients', ClientViewSet, base_name='client')
 router.register(r'api/transactions', TransactionViewSet, base_name='transaction')
 urlpatterns = router.urls
+
+# app_name = 'bank'
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
