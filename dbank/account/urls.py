@@ -2,21 +2,22 @@ from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 
 from .views import ClientListView, ClientDetailView, AccountListView, \
-    TransactionListView, AccountCreate, TransactionCreate, TransactionListAPIView, TransactionViewSet
-
-from .views import AccountListAPIView
+    TransactionListView, AccountCreate, TransactionCreate, TransactionViewSet, AccountViewSet
 
 app_name = 'bank'
 
-router = DefaultRouter()
-router.register(r'xxx', TransactionViewSet)
-urlpatterns = router.urls
+transaction_router = DefaultRouter()
+transaction_router.register(r'api/transactions', TransactionViewSet)
 
+account_router = DefaultRouter()
+account_router.register(r'api/accounts', AccountViewSet)
+
+urlpatterns = transaction_router.urls + account_router.urls
 
 urlpatterns += [
     # url(r'^$', HomePage.as_view(), name='home'),
-    url(r'api/accounts/$', AccountListAPIView.as_view(), name='account_list_api'),
-    url(r'api/transactions/$', TransactionListAPIView.as_view(), name='transaction_list_api'),
+    # url(r'api/accounts/$', AccountListAPIView.as_view(), name='account_list_api'),
+    # url(r'api/transactions/$', TransactionListAPIView.as_view(), name='transaction_list_api'),
 
     url(r'clients/$', ClientListView.as_view(), name='clients_list'),
     url(r'clients/(?P<pk>\d+)$', ClientDetailView.as_view(), name='clients_detail'),

@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 from .forms import TransactionForm
 from .models import Client, Account, Transaction
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, mixins
 
 from .serializers import AccountSerializer, TransactionSerializer
 
@@ -85,32 +85,53 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(TransactionCreate.success_url)
 
 
-class AccountListAPIView(generics.ListCreateAPIView):
-    serializer_class = AccountSerializer
+# class AccountListAPIView(generics.ListCreateAPIView):
+#     serializer_class = AccountSerializer
+#
+#     def get_queryset(self):
+#         return Account.objects.filter(owner=self.request.user)
 
-    def get_queryset(self):
-        return Account.objects.filter(owner=self.request.user)
 
-
-class TransactionListAPIView(generics.ListCreateAPIView):
-    # queryset = Transaction.objects.all()
-    serializer_class = TransactionSerializer
-
-    def get_queryset(self):
-        q1 = Transaction.objects.filter(src__owner=self.request.user)
-        q2 = Transaction.objects.filter(dest__owner=self.request.user)
-        return q1 | q2
+# class TransactionListAPIView(generics.ListCreateAPIView):
+#     # queryset = Transaction.objects.all()
+#     serializer_class = TransactionSerializer
+#
+#     def get_queryset(self):
+#         q1 = Transaction.objects.filter(src__owner=self.request.user)
+#         q2 = Transaction.objects.filter(dest__owner=self.request.user)
+#         return q1 | q2
 
 
 class TransactionViewSet(viewsets.ViewSet):
     queryset = Transaction.objects.all()
 
     def list(self, request, format='json'):
-        queryset = Transaction.objects.all()
-        serializer = TransactionSerializer(queryset, many=True)
+        q1 = Transaction.objects.filter(src__owner=self.request.user)
+        q2 = Transaction.objects.filter(dest__owner=self.request.user)
+        serializer = TransactionSerializer(q1 | q2, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Transaction.objects.get(id=pk)
         serializer = TransactionSerializer(queryset)
         return Response(serializer.data)
+
+
+class AccountViewSet(mixins.CreateModelMixin,
+                     mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
+    serializer_class = AccountSerializer
+
+    def list(self, request):
+        serializer = AccountSerializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        print(request.data)
+        pass
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
+
+
+
