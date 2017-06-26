@@ -81,8 +81,9 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         return {
-            'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user), empty_label='no account'),
-            'dest': ModelChoiceField(queryset=Account.objects.all(), empty_label='no account'),
+            'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user, closed=None),
+                                    empty_label='no account'),
+            'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='no account'),
         }
 
     def form_valid(self, form):
@@ -111,6 +112,12 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
 class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                      mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """
+    list:
+        Return all accounts
+
+        summary: kurnik sopa
+    """
     serializer_class = AccountSerializer
     # queryset = Account.objects.all()
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -149,7 +156,7 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         return Account.objects.filter(owner=self.request.user)
 
 
-class ClientViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class ClientViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = ClientSerializer
     queryset = Client.objects.all()
     authentication_classes = (SessionAuthentication, BasicAuthentication)
@@ -157,6 +164,11 @@ class ClientViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
     def retrieve(self, request, pk=None, format=None):
         client = get_object_or_404(Client, id=request.user.pk, pk=pk)
+        serializer = ClientSerializer(client, context={'request': request})
+        return Response(serializer.data)
+
+    def list(self, request):
+        client = get_object_or_404(Client, id=request.user.pk)
         serializer = ClientSerializer(client, context={'request': request})
         return Response(serializer.data)
 

@@ -21,12 +21,18 @@ def validate_iban(value):
         raise ValidationError('IBAN has wrong format.')
 
 
+def validate_amount(value):
+    if value < 0:
+        raise ValidationError('Amount must be positive number.')
+
+
 class Account(models.Model):
     iban = models.CharField('iban', max_length=10, null=False, unique=True, validators=[validate_iban])
     created = models.DateTimeField('creation date', auto_now_add=True)
     closed = models.DateTimeField('closed date', default=None, null=True, blank=True)
     balance = models.FloatField('current balance', default=0, null=False, blank=True)
     owner = models.ForeignKey(Client, null=False)
+    overdraft = models.FloatField('allowed overdraft', default=0, null=False)
 
     def deposit(self, amount):
         if self.is_closed():
@@ -97,7 +103,7 @@ class Transaction(models.Model):
     timestamp = models.DateTimeField('transaction timestamp', auto_now_add=True)
     src = models.ForeignKey('Account', default=None, null=True)
     dest = models.ForeignKey('Account', default=None, related_name='target', null=True)
-    amount = models.FloatField('transaction amount', null=False)
+    amount = models.FloatField('transaction amount', null=False, validators=[validate_amount])
 
     def get_type(self):
         if self.src is None:

@@ -3,3 +3,4 @@ django-bootstrap3==8.2.3
 django-debug-toolbar==1.7
 django-extensions==1.7.8
 djangorestframework==3.6.2
+django-cors-headers==2.1.0
