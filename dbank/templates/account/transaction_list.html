@@ -3,7 +3,7 @@
 {% block title %}List of mBank Transactions{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:transactions-list" %}">Transactions</a></li>
+    <li><a href="{% url "bank:transactions_list" %}">Transactions</a></li>
 {% endblock %}
 
 {% block content %}
@@ -41,7 +41,7 @@
         </div>
 
         <div class="row text-right">
-            <a class="btn btn-primary" href="{% url "bank:transactions-create" %}" role="button">Make Transaction</a>
+            <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
         </div>
     </div>
 {% endblock %}

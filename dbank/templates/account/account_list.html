@@ -3,7 +3,7 @@
 {% block title %}List of mBank Accounts{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url "bank:accounts-list" %}">Accounts</a></li>
+    <li><a href="{% url "bank:accounts_list" %}">Accounts</a></li>
 {% endblock %}
 
 {% block content %}
@@ -26,10 +26,10 @@
                     <td>{{ account.iban }}</td>
                     <td>{{ account.balance }}</td>
                     <td>
-                        <a href="{% url 'bank:clients-detail' account.owner.id %}">{{ account.owner.name }}</a>
+                        <a href="{% url 'bank:clients_detail' account.owner.id %}">{{ account.owner.name }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'bank:account-transactions' account.id %}">
+                        <a href="{% url 'bank:account_transactions' account.id %}">
                             {{ account.transactions.count }}
                         </a>
                     </td>
@@ -42,8 +42,8 @@
 
         <div class="row text-right">
             <div class="btn-group" role="group" aria-label="...">
-                <a class="btn btn-primary" href="{% url "bank:accounts-create" %}" role="button">New Account</a>
-                <a class="btn btn-primary" href="{% url "bank:transactions-create" %}" role="button">Make Transaction</a>
+                <a class="btn btn-primary" href="{% url "bank:accounts_create" %}" role="button">New Account</a>
+                <a class="btn btn-primary" href="{% url "bank:transactions_create" %}" role="button">Make Transaction</a>
             </div>
         </div>
     </div>

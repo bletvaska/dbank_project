@@ -2,10 +2,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
 # Create your views here.
+from django.forms import ModelChoiceField
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
+from .forms import TransactionForm
 from .models import Client, Account, Transaction
 from rest_framework import generics
 
@@ -50,7 +52,7 @@ class AccountCreate(LoginRequiredMixin, CreateView):
     model = Account
     # form_class = AccountForm
     fields = ['iban']
-    success_url = reverse_lazy('bank:accounts-list')
+    success_url = reverse_lazy('bank:accounts_list')
 
     def form_valid(self, form):
         print('juchu')
@@ -64,12 +66,22 @@ class AccountCreate(LoginRequiredMixin, CreateView):
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
     model = Transaction
-    fields = ['src', 'dest', 'amount', ]
-    success_url = reverse_lazy('bank:transactions-list')
+    success_url = reverse_lazy('bank:transactions_list')
+    form_class = TransactionForm
+
+    def get_initial(self):
+        return {
+            'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user, closed=None),
+                                    empty_label='no account'),
+            'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='no account'),
+        }
 
     def form_valid(self, form):
-        print('juchu')
-        return None
+        transaction = form.instance
+        account = transaction.src
+        account.transfer(transaction.dest, transaction.amount)
+
+        return HttpResponseRedirect(TransactionCreate.success_url)
 
 
 class AccountListAPIView(generics.ListCreateAPIView):
