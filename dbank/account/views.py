@@ -73,5 +73,8 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
 
 class AccountListAPIView(generics.ListCreateAPIView):
-    queryset = Account.objects.all()
+    # queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
