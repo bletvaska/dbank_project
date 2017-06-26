@@ -6,12 +6,13 @@ from django.forms import ModelChoiceField
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
+from rest_framework.response import Response
 
 from .forms import TransactionForm
 from .models import Client, Account, Transaction
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
-from .serializers import AccountSerializer
+from .serializers import AccountSerializer, TransactionSerializer
 
 
 class HomePage(TemplateView):
@@ -58,10 +59,10 @@ class AccountCreate(LoginRequiredMixin, CreateView):
         print('juchu')
         return HttpResponseRedirect(self.get_success_url())
 
-    # def get_form_kwargs(self):
-    #     kwargs = super(AccountCreate, self).get_form_kwargs()
-    #     kwargs['owner'] = self.request.user
-    #     return kwargs
+        # def get_form_kwargs(self):
+        #     kwargs = super(AccountCreate, self).get_form_kwargs()
+        #     kwargs['owner'] = self.request.user
+        #     return kwargs
 
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
@@ -85,8 +86,31 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
 
 class AccountListAPIView(generics.ListCreateAPIView):
-    # queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
     def get_queryset(self):
         return Account.objects.filter(owner=self.request.user)
+
+
+class TransactionListAPIView(generics.ListCreateAPIView):
+    # queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+
+    def get_queryset(self):
+        q1 = Transaction.objects.filter(src__owner=self.request.user)
+        q2 = Transaction.objects.filter(dest__owner=self.request.user)
+        return q1 | q2
+
+
+class TransactionViewSet(viewsets.ViewSet):
+    queryset = Transaction.objects.all()
+
+    def list(self, request, format='json'):
+        queryset = Transaction.objects.all()
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Transaction.objects.get(id=pk)
+        serializer = TransactionSerializer(queryset)
+        return Response(serializer.data)
