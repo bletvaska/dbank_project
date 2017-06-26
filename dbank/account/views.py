@@ -6,8 +6,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
-from account.forms import AccountForm
-from account.models import Client, Account, Transaction
+from .models import Client, Account, Transaction
+from rest_framework import generics
+
+from .serializers import AccountSerializer
 
 
 class HomePage(TemplateView):
@@ -68,3 +70,8 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         print('juchu')
         return None
+
+
+class AccountListAPIView(generics.ListCreateAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
