@@ -121,6 +121,7 @@ class AccountViewSet(mixins.CreateModelMixin,
                      mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     serializer_class = AccountSerializer
+    queryset = Account.objects.all()
 
     def list(self, request):
         serializer = AccountSerializer(self.get_queryset(), many=True)
