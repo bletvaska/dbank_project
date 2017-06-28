@@ -112,23 +112,29 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
 class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                      mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    """
-    list:
-        Return all accounts
-
-        summary: kurnik sopa
-    """
     serializer_class = AccountSerializer
     # queryset = Account.objects.all()
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
+        """
+        Return all accounts
+        :param request:
+        :return:
+        """
         # queryset = Account.objects.filter(owner=self.request.user)
         serializer = AccountSerializer(self.get_queryset(), context={'request': request}, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
+        """
+        Returns information about specific account
+
+        :param request: the request object
+        :param pk: primary key of the account
+        :return:
+        """
         # queryset = Account.objects.filter(owner=self.request.user)
         account = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = AccountSerializer(account, context={'request': request})
