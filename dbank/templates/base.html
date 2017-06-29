@@ -34,8 +34,8 @@
                     <ul class="nav navbar-nav">
                         {% block navbar %}
                             {% if user.is_authenticated %}
-                            <li><a href="{% url "accounts_list" %}">My Accounts</a></li>
-                            <li><a href="{% url "transactions_list" %}">My Transactions</a></li>
+                            <li><a href="{% url "accounts:accounts_list" %}">My Accounts</a></li>
+                            <li><a href="{% url "transactions:transactions_list" %}">My Transactions</a></li>
                             {% endif %}
                         {% endblock %}
                     </ul>

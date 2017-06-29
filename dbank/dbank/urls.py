@@ -13,26 +13,35 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from accounts.views import DashboardView
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 # from accounts.views import HomepageView
+from django.views.generic import TemplateView
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='dBank REST API')
 
 urlpatterns = [
-
-    url(r'^accounts/', include('accounts.urls')),
+    url(r'^admin/', admin.site.urls),
 
     # login/logout
-    #url(r'^login/$', auth_views.login, name='login'),
     url(r'^login/$',
         auth_views.LoginView.as_view(redirect_authenticated_user=True),
         name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
-    # url(r'^$', HomepageView.as_view(), name='homepage'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    url(r'^admin/', admin.site.urls),
+    url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='homepage'),
+    url(r'^accounts/', include('accounts.urls')),
+    url(r'^transactions/', include('transactions.urls')),
+    url(r'^clients/', include('clients.urls')),
+
+    url(r'^docs/$', schema_view),
+    url(r'^dashboard$', DashboardView.as_view(), name='dashboard')
 ]
 
 if settings.DEBUG:

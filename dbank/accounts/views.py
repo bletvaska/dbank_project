@@ -15,10 +15,6 @@ from .models import Account
 from .serializers import AccountSerializer
 
 
-class HomepageView(TemplateView):
-    template_name = 'homepage.html'
-
-
 class DashboardView(TemplateView):
     template_name = 'accounts/dashboard.html'
 

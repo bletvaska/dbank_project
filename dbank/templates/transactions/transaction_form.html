@@ -2,6 +2,10 @@
 
 {% block title %}Make Transaction{% endblock %}
 
+{% block breadcrumbs %}
+    <li><a href="{% url "transactions:transactions_list" %}">Transactions</a></li>
+{% endblock %}
+
 {% block content %}
     <h1>Make Transaction</h1>
 

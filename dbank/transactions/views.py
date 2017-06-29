@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.http import HttpResponseRedirect
 
@@ -9,7 +10,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from account.models import Account
+from accounts.models import Account
 from .forms import TransactionForm
 from .models import Transaction
 from .serializers import TransactionSerializer
@@ -26,14 +27,14 @@ class TransactionViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewset
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
     model = Transaction
-    success_url = reverse_lazy('transactions_list')
+    success_url = reverse_lazy('transactions:transactions_list')
     form_class = TransactionForm
 
     def get_initial(self):
         return {
             'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user, closed=None),
-                                    empty_label='no accounts'),
-            'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='no accounts'),
+                                    empty_label='nothing selected'),
+            'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='nothing selected'),
         }
 
     def form_valid(self, form):
