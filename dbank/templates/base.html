@@ -83,7 +83,7 @@
                 <ol class="breadcrumb">
                     <li>
 {#                        <a href="{% url "homepage" %}">Home</a>#}
-                        <a href="{% url "dashboard" %}">{{ user.get_full_name|title }}</a>
+                        <a href="{% url "clients:dashboard" %}">{{ user.get_full_name|title }}</a>
                     </li>
                     {% block breadcrumbs %}{% endblock %}
                 </ol>

@@ -10,20 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from transactions.models import Transaction
 from .models import Account
 from .serializers import AccountSerializer
-
-
-class DashboardView(TemplateView):
-    template_name = 'accounts/dashboard.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DashboardView, self).get_context_data(**kwargs)
-        user = self.request.user
-        context['client_accounts'] = Account.objects.filter(owner=user)[:10]
-        context['last_transactions'] = Transaction.objects.filter(Q(src__owner=user) | Q(dest__owner=user)).order_by('-timestamp')[:10]
-        return context
 
 
 # class ClientDetailView(LoginRequiredMixin, DetailView):
