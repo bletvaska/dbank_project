@@ -1,22 +1,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 # Create your views here.
-from django.forms import ModelChoiceField
-from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, CreateView, TemplateView, FormView
-from rest_framework import generics, status, viewsets, mixins
+from django.views.generic import ListView, CreateView, TemplateView
+from rest_framework import status, viewsets, mixins
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.viewsets import ModelViewSet
 
-from .forms import TransactionForm
-from .models import Client, Account, Transaction
-from .serializers import AccountSerializer, TransactionSerializer, ClientSerializer
+from transactions.models import Transaction
+from .models import Account
+from .serializers import AccountSerializer
 
 
 class HomepageView(TemplateView):
@@ -24,7 +20,7 @@ class HomepageView(TemplateView):
 
 
 class DashboardView(TemplateView):
-    template_name = 'account/dashboard.html'
+    template_name = 'accounts/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
@@ -48,21 +44,6 @@ class AccountListView(LoginRequiredMixin, ListView):
         return Account.objects.filter(owner=self.request.user)
 
 
-class TransactionListView(LoginRequiredMixin, ListView):
-    model = Transaction
-    ordering = ['-timestamp']
-
-    def get_queryset(self):
-        ordering = self.get_ordering()
-
-        if 'account_id' in self.kwargs:
-            account_id = self.kwargs.get('account_id')
-            return Transaction.objects.filter(Q(src__id=account_id) | Q(dest__id=account_id)).order_by(*ordering)
-        else:
-            client = self.request.user
-            return Transaction.objects.filter(Q(src__owner=client) | Q(dest__owner=client)).order_by(*ordering)
-
-
 class AccountCreate(LoginRequiredMixin, CreateView):
     model = Account
     # form_class = AccountForm
@@ -74,24 +55,6 @@ class AccountCreate(LoginRequiredMixin, CreateView):
         return super(AccountCreate, self).form_valid(form)
 
 
-class TransactionCreate(LoginRequiredMixin, CreateView):
-    model = Transaction
-    success_url = reverse_lazy('transactions_list')
-    form_class = TransactionForm
-
-    def get_initial(self):
-        return {
-            'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user, closed=None),
-                                    empty_label='no account'),
-            'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='no account'),
-        }
-
-    def form_valid(self, form):
-        transaction = form.instance
-        account = transaction.src
-        account.transfer(transaction.dest, transaction.amount)
-
-        return HttpResponseRedirect(TransactionCreate.success_url)
 
 
 # @authentication_classes((SessionAuthentication, BasicAuthentication))
@@ -129,10 +92,10 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
 
     def retrieve(self, request, pk=None):
         """
-        Returns information about specific account
+        Returns information about specific accounts
 
         :param request: the request object
-        :param pk: primary key of the account
+        :param pk: primary key of the accounts
         :return:
         """
         # queryset = Account.objects.filter(owner=self.request.user)
@@ -142,7 +105,7 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
 
     def create(self, request):
         data = {'iban': request.data['iban'], 'owner': reverse('client-detail', kwargs={'pk': request.user.id})}
-        # account = Account(iban=request.data['iban'], owner=request.user)
+        # accounts = Account(iban=request.data['iban'], owner=request.user)
         serializer = AccountSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -162,30 +125,7 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         return Account.objects.filter(owner=self.request.user)
 
 
-class ClientViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    serializer_class = ClientSerializer
-    queryset = Client.objects.all()
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
 
-    def retrieve(self, request, pk=None, format=None):
-        client = get_object_or_404(Client, id=request.user.pk, pk=pk)
-        serializer = ClientSerializer(client, context={'request': request})
-        return Response(serializer.data)
-
-    def list(self, request):
-        client = get_object_or_404(Client, id=request.user.pk)
-        serializer = ClientSerializer(client, context={'request': request})
-        return Response(serializer.data)
-
-
-class TransactionViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
-    serializer_class = TransactionSerializer
-
-    def get_queryset(self):
-        return Transaction.objects.filter(Q(src__owner=self.request.user) | Q(dest__owner=self.request.user)).order_by('-timestamp')
 
 
 # @authentication_classes((SessionAuthentication, BasicAuthentication))

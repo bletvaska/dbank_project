@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'bootstrap3',
     'rest_framework',
     'rest_framework_swagger',
-    
-    'account.apps.AccountConfig',
-    # 'account',
+
+    'accounts.apps.AccountConfig',
+    'transactions',
+    'clients'
+    # 'accounts',
 
 ]
 
@@ -136,7 +138,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGIN_URL = 'login'
 
-AUTH_USER_MODEL = 'account.Client'
+AUTH_USER_MODEL = 'clients.Client'
 
 INTERNAL_IPS = '127.0.0.1'
 

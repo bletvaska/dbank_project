@@ -40,5 +40,5 @@ def test_when_account_with_same_iban_is_inserted_then_raise_IntegrityError():
 
 # @pytest.mark.django_db
 # def test_when_wrong_iban_is_given_then_raise_exception_X():
-#     account = Account(iban='jano', owner='jano')
-#     account.save()
+#     accounts = Account(iban='jano', owner='jano')
+#     accounts.save()

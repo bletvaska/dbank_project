@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from .models import Account, Transaction, Client
-
-
-class AccountSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Account
-        fields = ('url', 'iban', 'owner', 'balance', 'closed')
+from .models import Transaction
 
 
 class TransactionSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,9 +18,3 @@ class TransactionSerializer(serializers.HyperlinkedModelSerializer):
         transaction.src.transfer(transaction.dest, transaction.amount)
 
         return transaction
-
-
-class ClientSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Client
-        fields = ('url', 'first_name', 'last_name', 'email', 'username', 'phone_number')

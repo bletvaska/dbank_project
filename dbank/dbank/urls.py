@@ -18,11 +18,11 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-from account.views import HomepageView
+# from accounts.views import HomepageView
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^bank/', include('account.urls')),
+
+    url(r'^accounts/', include('accounts.urls')),
 
     # login/logout
     #url(r'^login/$', auth_views.login, name='login'),
@@ -30,7 +30,9 @@ urlpatterns = [
         auth_views.LoginView.as_view(redirect_authenticated_user=True),
         name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
-    url(r'^$', HomepageView.as_view(), name='homepage'),
+    # url(r'^$', HomepageView.as_view(), name='homepage'),
+
+    url(r'^admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

@@ -3,3 +3,5 @@ migrations/
 .idea/
 db.sqlite3
 venv/
+.cache
+*.egg-info/

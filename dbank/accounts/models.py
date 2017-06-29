@@ -1,18 +1,13 @@
 import datetime
 
 import re
-from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 
 
 # Create your models here.
-
-class Client(AbstractUser):
-    phone_number = models.CharField('phone number', max_length=64, null=True)
-
-    def __str__(self):
-        return self.get_full_name().title()
+from django.urls import reverse
+from transactions.models import Transaction
 
 
 def validate_iban(value):
@@ -31,7 +26,7 @@ class Account(models.Model):
     created = models.DateTimeField('creation date', auto_now_add=True)
     closed = models.DateTimeField('closed date', default=None, null=True, blank=True)
     balance = models.FloatField('current balance', default=0, null=False, blank=True)
-    owner = models.ForeignKey(Client, null=False)
+    owner = models.ForeignKey('clients.Client', null=False)
     overdraft = models.FloatField('allowed overdraft', default=0, null=False)
 
     def deposit(self, amount):
@@ -92,31 +87,7 @@ class Account(models.Model):
         self.save()
 
     def __str__(self):
-        return '{} ({}) {}'.format(self.iban, self.owner.get_full_name(), self.balance)
+        return '{} ({})'.format(self.iban, self.owner.get_full_name())
 
     # def get_absolute_url(self):
-    #     # from django.urls import reverse
-    #     return reverse('account.views.details', args=[str(self.id)])
-
-
-class Transaction(models.Model):
-    timestamp = models.DateTimeField('transaction timestamp', auto_now_add=True)
-    src = models.ForeignKey('Account', default=None, null=True)
-    dest = models.ForeignKey('Account', default=None, related_name='target', null=True)
-    amount = models.FloatField('transaction amount', null=False, validators=[validate_amount])
-
-    def get_type(self):
-        if self.src is None:
-            return 'deposit'
-        elif self.dest is None:
-            return 'withdraw'
-        else:
-            return 'transaction'
-
-    def __str__(self):
-        if self.src is None:
-            return 'deposit to {} at {}: {}'.format(self.dest, self.timestamp, self.amount)
-        elif self.dest is None:
-            return 'withdraw from {} at {}: {}'.format(self.src, self.timestamp, self.amount)
-        else:
-            return 'transaction from {} to {} at {}: {}'.format(self.src, self.dest, self.timestamp, self.amount)
+    #     return reverse('accounts.views.details', args=[str(self.id)])
