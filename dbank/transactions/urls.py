@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from .views import TransactionListView, TransactionCreate
 
-app_name = 'transactions'
+# app_name = 'transactions'
 
 urlpatterns = [
     url(r'^$', TransactionListView.as_view(), name='transactions_list'),

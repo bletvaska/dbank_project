@@ -10,7 +10,7 @@ from .views import AccountListView, AccountCreate
 # router.register(r'api/transactions', TransactionViewSet, base_name='transaction')
 # urlpatterns = router.urls
 
-app_name = 'accounts'
+# app_name = 'accounts'
 
 urlpatterns = [
     # url(r'my/dashboard/$', DashboardView.as_view(), name='dashboard'),

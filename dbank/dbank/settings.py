@@ -42,11 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
 
-    'accounts.apps.AccountConfig',
-    'transactions',
-    'clients'
-    # 'accounts',
-
+    'accounts.apps.AccountsConfig',  # accounts
+    'transactions.apps.TransactionsConfig',  # transactions
+    'clients.apps.ClientsConfig'  # clients
 ]
 
 # Application definition

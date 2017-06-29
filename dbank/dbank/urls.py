@@ -35,9 +35,9 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='homepage'),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^transactions/', include('transactions.urls')),
-    url(r'^clients/', include('clients.urls')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^transactions/', include('transactions.urls', namespace='transactions')),
+    url(r'^clients/', include('clients.urls', namespace='clients')),
 
     url(r'^docs/$', schema_view),
 ]
