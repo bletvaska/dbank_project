@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 # Create your views here.
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
@@ -88,7 +87,7 @@ class AccountViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         return Response(serializer.data)
 
     def create(self, request):
-        data = {'iban': request.data['iban'], 'owner': reverse('client-detail', kwargs={'pk': request.user.id})}
+        data = {'iban': request.data['iban'], 'owner': reverse('clients-detail', kwargs={'pk': request.user.id})}
         # accounts = Account(iban=request.data['iban'], owner=request.user)
         serializer = AccountSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
