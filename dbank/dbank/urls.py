@@ -13,8 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-import accounts
-import rest_framework
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
@@ -22,7 +20,6 @@ from django.contrib.auth import views as auth_views
 
 # from accounts.views import HomepageView
 from django.views.generic import TemplateView
-from rest_framework import views
 from rest_framework_swagger.views import get_swagger_view
 
 schema_view = get_swagger_view(title='dBank REST API')

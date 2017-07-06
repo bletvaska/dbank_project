@@ -7,6 +7,10 @@ class TransactionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Transaction
         fields = ('src', 'dest', 'amount', 'timestamp')
+        extra_kwargs = {
+            'src': {'view_name': 'accounts:accounts-detail'},
+            'dest': {'view_name': 'accounts:accounts-detail'},
+        }
 
     def create(self, validated_data):
         transaction = Transaction.objects.create(
