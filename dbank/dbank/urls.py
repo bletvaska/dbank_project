@@ -20,9 +20,9 @@ from django.contrib.auth import views as auth_views
 
 # from accounts.views import HomepageView
 from django.views.generic import TemplateView
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='dBank REST API')
+# schema_view = get_swagger_view(title='dBank REST API')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -40,7 +40,7 @@ urlpatterns = [
     url(r'', include('transactions.urls', namespace='transactions')),
     url(r'', include('clients.urls', namespace='clients')),
 
-    url(r'^docs/$', schema_view),
+    # url(r'^docs/$', schema_view),
 ]
 
 if settings.DEBUG:

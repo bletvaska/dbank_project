@@ -22,6 +22,16 @@ then you are on your own ;) Or you can install [Chocolately](https://chocolatey.
 and run following commands:
 
 ```shell
-choco install cmder
-choco install python3
+choco install cmder python3
 ```
+
+
+### Running Tests
+
+_py.test_ is used for testing instead of _unittest_. To run tests:
+
+```shell
+./manage.py
+```
+
+### Running Coverage

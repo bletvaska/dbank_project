@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'bootstrap3',
     'rest_framework',
-    'rest_framework_swagger',
 
     'accounts.apps.AccountsConfig',  # accounts
     'transactions.apps.TransactionsConfig',  # transactions
@@ -151,10 +150,10 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'basic': {
-            'type': 'basic'
-        }
-    },
-}
+# SWAGGER_SETTINGS = {
+#     'SECURITY_DEFINITIONS': {
+#         'basic': {
+#             'type': 'basic'
+#         }
+#     },
+# }

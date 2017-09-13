@@ -4,7 +4,8 @@ import random
 import pytest
 from django.db import IntegrityError
 
-from .models import Account, Client
+from .models import Account
+from clients.models import Client
 
 # @pytest.fixture(scope='module')
 # def create_random_clients():
