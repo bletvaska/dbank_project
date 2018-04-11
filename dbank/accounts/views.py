@@ -38,8 +38,6 @@ class AccountCreate(LoginRequiredMixin, CreateView):
         return super(AccountCreate, self).form_valid(form)
 
 
-
-
 # @authentication_classes((SessionAuthentication, BasicAuthentication))
 # @permission_classes((IsAuthenticated,))
 # class AccountCreateReadView(generics.ListCreateAPIView):

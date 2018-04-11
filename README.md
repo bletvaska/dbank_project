@@ -25,6 +25,15 @@ and run following commands:
 choco install cmder python3
 ```
 
+## Post Installation Configuration
+
+```bash
+./manage.py makemigrations account
+./manage.py migrate
+./manage.py createsuperuser
+./manage.py runserver
+```
+
 
 ### Running Tests
 
@@ -35,3 +44,8 @@ _py.test_ is used for testing instead of _unittest_. To run tests:
 ```
 
 ### Running Coverage
+
+### Resources
+
+* [The Django Test Driven Development Cookbook - Singapore Djangonauts](https://www.youtube.com/watch?v=41ek3VNx_6Q&t=1s) - YouTube video
+* Two Scoops of Django
