@@ -28,7 +28,7 @@ choco install cmder python3
 ## Post Installation Configuration
 
 ```bash
-./manage.py makemigrations account
+./manage.py makemigrations accounts clients transactions
 ./manage.py migrate
 ./manage.py createsuperuser
 ./manage.py runserver

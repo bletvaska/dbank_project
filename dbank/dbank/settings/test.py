@@ -1,4 +1,4 @@
-from .settings import *
+from .base import *
 
 DATABASES = {
     'default': {
@@ -8,3 +8,5 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+DEBUG = True

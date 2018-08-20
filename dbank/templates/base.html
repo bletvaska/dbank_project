@@ -27,7 +27,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="{% url "homepage" %}">
-                        {% block brand %}mBank{% endblock %}
+                        {% block brand %}dBank{% endblock %}
                     </a>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -69,8 +69,14 @@
                                             Login
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ register_url }}">
+                                            Register
+                                        </a>
+                                    </li>
                                 {% endif %}
                             {% endif %}
+
                         {% endblock %}
                     </ul>
                 </div>
@@ -108,7 +114,7 @@
                     Powered by <a href="https://github.com/nathan-osman/django-bootstrap3-templates">django-bootstrap3-templates</a>
                 </p>
                 <p>
-                    Copyright &copy; {% now "Y" %}
+                    Copyright &copy; 2017 - {% now "Y" %}
                 </p>
             {% endblock %}
         </div>
