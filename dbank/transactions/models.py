@@ -1,10 +1,15 @@
 from django.db import models
-from rest_framework.exceptions import ValidationError
+from django.core.exceptions import ValidationError
 
 
 def validate_amount(value):
     if value < 0:
         raise ValidationError('Amount must be positive number.')
+
+
+# def validate_closed_account(account):
+#     if account.is_closed():
+#         raise ValidationError("Account can't be closed.")
 
 
 # Create your models here.
@@ -14,7 +19,8 @@ class Transaction(models.Model):
     dest = models.ForeignKey('accounts.Account', default=None, related_name='target', null=True)
     amount = models.FloatField('transaction amount', null=False, validators=[validate_amount])
 
-    def get_type(self):
+    @property
+    def type(self):
         if self.src is None:
             return 'deposit'
         elif self.dest is None:
@@ -29,3 +35,16 @@ class Transaction(models.Model):
             return 'withdraw from {} at {}: {}'.format(self.src, self.timestamp, self.amount)
         else:
             return 'transaction from {} to {} at {}: {}'.format(self.src, self.dest, self.timestamp, self.amount)
+
+    def proceed(self):
+        # TODO testnut, ci zbehne kontrola na zatvoreny/otvoreny ucet
+        if self.timestamp is not None:
+            raise ValueError(f'Transaction already proceeded at {self.timestamp}')
+
+        self.src.balance -= self.amount
+        self.src.save()
+        self.dest.balance += self.amount
+        self.dest.save()
+
+        # save
+        self.save()

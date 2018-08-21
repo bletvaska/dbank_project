@@ -6,7 +6,6 @@ from django.db import models
 
 
 # Create your models here.
-from django.urls import reverse
 from transactions.models import Transaction
 
 
@@ -49,22 +48,6 @@ class Account(models.Model):
         # make transaction
         Transaction(src=self, amount=amount).save()
 
-    def transfer(self, dest, amount):
-        # check if accounts are open first
-        if self.is_closed():
-            raise ValueError('Source Account is Closed')
-
-        if dest.is_closed():
-            raise ValueError('Destination Account is Closed')
-
-        self.balance -= amount
-        self.save()
-        dest.balance += amount
-        dest.save()
-
-        # make transaction
-        Transaction(src=self, dest=dest, amount=amount).save()
-
     def is_open(self):
         return self.closed is None
     is_open.boolean = True
@@ -72,6 +55,7 @@ class Account(models.Model):
     def is_closed(self):
         return not self.is_open()
 
+    @property
     def transactions(self):
         return self.transaction_set.all() | self.target.all()
 
@@ -86,8 +70,11 @@ class Account(models.Model):
             self.closed = close_date
         self.save()
 
-    def __str__(self):
+    def __repr__(self):
         return '{} ({})'.format(self.iban, self.owner.get_full_name())
+
+    def __str__(self):
+        return self.iban
 
     # def get_absolute_url(self):
     #     return reverse('accounts.views.details', args=[str(self.id)])

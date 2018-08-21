@@ -25,7 +25,7 @@
                 {% for transaction in object_list %}
                     <tr>
                         <td>{{ transaction.timestamp }}</td>
-                        <td>{{ transaction.get_type }}</td>
+                        <td>{{ transaction.type }}</td>
                         <td>
                             {{ transaction.src.iban }}
                         </td>

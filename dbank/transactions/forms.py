@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Transaction
+from .models import Transaction, validate_amount
 
 
 class TransactionForm(ModelForm):

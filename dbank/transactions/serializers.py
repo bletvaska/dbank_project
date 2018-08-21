@@ -1,24 +1,40 @@
 from rest_framework import serializers
 
+from accounts.models import Account
 from .models import Transaction
 
 
+def validate_account(iban):
+    account = Account.objects.filter(iban=iban).first()
+
+    if account is None:
+        raise serializers.ValidationError("Account doesn't exist.")
+
+    if account.is_closed():
+        raise serializers.ValidationError("Account is closed.")
+
+    return iban
+
+
 class TransactionSerializer(serializers.HyperlinkedModelSerializer):
+    src = serializers.CharField(max_length=10, validators=[validate_account])
+    dest = serializers.CharField(max_length=10, validators=[validate_account])
+    amount = serializers.IntegerField()
+
     class Meta:
         model = Transaction
-        fields = ('src', 'dest', 'amount', 'timestamp')
+        fields = ('url', 'src', 'dest', 'amount', 'timestamp')
         extra_kwargs = {
-            'src': {'view_name': 'accounts:accounts-detail'},
-            'dest': {'view_name': 'accounts:accounts-detail'},
+            'url': {'view_name': 'transactions:transactions-detail'}
         }
 
     def create(self, validated_data):
-        transaction = Transaction.objects.create(
-            src=validated_data['src'],
-            dest=validated_data['dest'],
-            amount=validated_data['amount']
-        )
+        # get accounts by their IBAN
+        src = Account.objects.filter(iban=validated_data['src']).first()
+        dest = Account.objects.filter(iban=validated_data['dest']).first()
 
-        transaction.src.transfer(transaction.dest, transaction.amount)
+        # create transaction object and proceed
+        transaction = Transaction(src=src, dest=dest, amount=validated_data['amount'])
+        transaction.proceed()
 
         return transaction

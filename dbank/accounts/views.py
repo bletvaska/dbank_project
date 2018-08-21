@@ -31,7 +31,7 @@ class AccountCreate(LoginRequiredMixin, CreateView):
     model = Account
     # form_class = AccountForm
     fields = ['iban']
-    success_url = reverse_lazy('accounts_list')
+    success_url = reverse_lazy('accounts:accounts_list')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user

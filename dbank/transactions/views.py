@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms import ModelChoiceField
@@ -8,21 +9,35 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 from rest_framework import mixins, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import Account
+from rest_framework.response import Response
+
 from .forms import TransactionForm
 from .models import Transaction
 from .serializers import TransactionSerializer
 
 
-class TransactionViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+class TransactionViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+                         viewsets.GenericViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
     serializer_class = TransactionSerializer
 
     def get_queryset(self):
-        return Transaction.objects.filter(Q(src__owner=self.request.user) | Q(dest__owner=self.request.user)).order_by('-timestamp')
+        return Transaction.objects.filter(Q(src__owner=self.request.user) | Q(dest__owner=self.request.user)).order_by(
+            '-timestamp')
+
+    def create(self, request, *args, **kwargs):
+        response = super(TransactionViewSet, self).create(request, args, kwargs)
+        return response
+
+    def retrieve(self, request, pk=None):
+        transaction = get_object_or_404(self.get_queryset(), pk=pk)
+        serializer = TransactionSerializer(transaction, context={'request': request})
+        return Response(serializer.data)
 
 
 class TransactionCreate(LoginRequiredMixin, CreateView):
@@ -35,12 +50,14 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
             'src': ModelChoiceField(queryset=Account.objects.filter(owner=self.request.user, closed=None),
                                     empty_label='nothing selected'),
             'dest': ModelChoiceField(queryset=Account.objects.filter(closed=None), empty_label='nothing selected'),
+            # 'amount': IntegerField(min_value=1)  # TODO validates the input
         }
 
     def form_valid(self, form):
         transaction = form.instance
-        account = transaction.src
-        account.transfer(transaction.dest, transaction.amount)
+        transaction.proceed()
+
+        messages.info(self.request, f'Transaction of {transaction.amount} was successful.')
 
         return HttpResponseRedirect(TransactionCreate.success_url)
 
