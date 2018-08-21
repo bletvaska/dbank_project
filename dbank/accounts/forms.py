@@ -1,6 +1,6 @@
-from django.forms import ModelForm, ModelChoiceField
+from django.forms import ModelForm
 
-from .models import Account, Transaction
+from .models import Account
 
 
 class AccountForm(ModelForm):
