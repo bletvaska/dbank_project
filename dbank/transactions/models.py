@@ -30,11 +30,11 @@ class Transaction(models.Model):
 
     def __str__(self):
         if self.src is None:
-            return 'deposit to {} at {}: {}'.format(self.dest, self.timestamp, self.amount)
+            return f'deposit to {self.dest} at {self.timestamp}: {self.amount}'
         elif self.dest is None:
-            return 'withdraw from {} at {}: {}'.format(self.src, self.timestamp, self.amount)
+            return f'withdraw from {self.src} at {self.timestamp}: {self.amount}'
         else:
-            return 'transaction from {} to {} at {}: {}'.format(self.src, self.dest, self.timestamp, self.amount)
+            return f'transaction from {self.src} to {self.dest} at {self.timestamp}: {self.amount}'
 
     def proceed(self):
         # TODO testnut, ci zbehne kontrola na zatvoreny/otvoreny ucet

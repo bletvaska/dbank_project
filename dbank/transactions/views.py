@@ -65,6 +65,7 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 class TransactionListView(LoginRequiredMixin, ListView):
     model = Transaction
     ordering = ['-timestamp']
+    paginate_by = 15
 
     def get_queryset(self):
         ordering = self.get_ordering()
